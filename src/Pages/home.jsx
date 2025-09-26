@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FaLeaf, FaHandshake, FaStar } from "react-icons/fa";
 import products from "../data/Products";
 import OurStory from "./OurStory";
 import api from "../lib/api";
@@ -48,33 +49,40 @@ export default function Home() {
       <section className="hero">
         <div className="hero-content">
           <div className="hero-text">
-            <h1>Welcome to Kalungu Banana Fiber</h1>
-            <p>Discover beautiful, sustainable products crafted from natural banana fiber. Supporting local communities while protecting our planet.</p>
+            <h1 className="hero-title">Welcome to Kalungu Banana Fiber</h1>
+            <p className="hero-subtitle">Discover beautiful, sustainable products crafted from natural banana fiber. Supporting local communities while protecting our planet.</p>
             <div className="hero-buttons">
-              <Link to="/shop" className="hero-btn primary">Explore Our Crafts</Link>
-              <Link to="/our-story" className="hero-btn secondary">Our Story</Link>
+              <Link to="/shop" className="btn btn-primary hero-btn">Explore Our Crafts</Link>
+              <Link to="/our-story" className="btn btn-secondary hero-btn">Our Story</Link>
             </div>
           </div>
         </div>
+        <div className="hero-overlay"></div>
       </section>
 
       {/* Features Section */}
-      <section className="features-section">
+      <section className="features-section py-4">
         <div className="container">
-          <h2>Why Choose Kalungu?</h2>
+          <h2 className="section-title">Why Choose Kalungu?</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🌱</div>
+              <div className="feature-icon">
+                <FaLeaf />
+              </div>
               <h3>100% Sustainable</h3>
               <p>Made from natural banana fiber, completely biodegradable and eco-friendly.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🤝</div>
+              <div className="feature-icon">
+                <FaHandshake />
+              </div>
               <h3>Fair Trade</h3>
               <p>Supporting local artisans and communities in Uganda with fair wages.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">✨</div>
+              <div className="feature-icon">
+                <FaStar />
+              </div>
               <h3>Handcrafted</h3>
               <p>Each product is carefully handcrafted with attention to detail and quality.</p>
             </div>
@@ -83,9 +91,9 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="products-section">
+      <section className="products-section py-4 bg-light">
         <div className="container">
-          <h2>Featured Products</h2>
+          <h2 className="section-title">Featured Products</h2>
           <div className="products-grid">
             {featuredProducts.map((product) => {
               const inCart = cart.some(item => item.product_id === product.id);
@@ -96,9 +104,9 @@ export default function Home() {
                     <img src={product.image} alt={product.name} />
                     {!product.inStock && <div className="out-of-stock">Out of Stock</div>}
                     <div className="product-overlay">
-                      <Link to={`/shop/${product.id}`} className="btn-details">View Details</Link>
+                      <Link to={`/shop/${product.id}`} className="btn btn-secondary btn-details">View Details</Link>
                       <button 
-                        className="btn-cart" 
+                        className="btn btn-primary btn-cart" 
                         onClick={() => addToCart(product)}
                         disabled={!product.inStock || inCart || loadingCart}
                       >
@@ -123,8 +131,8 @@ export default function Home() {
               );
             })}
           </div>
-          <div className="products-cta">
-            <Link to="/shop" className="cta-button">View All Products</Link>
+          <div className="products-cta text-center">
+            <Link to="/shop" className="btn btn-primary cta-button">View All Products</Link>
           </div>
         </div>
       </section>

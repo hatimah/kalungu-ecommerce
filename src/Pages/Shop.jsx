@@ -87,12 +87,45 @@ export default function Shop() {
     }
   };
 
+  const handleApplyFilters = () => {
+    setSidebarOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    setSelectedCategory('all');
+    setSearchTerm('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSortBy('name');
+  };
+
   if (loading) {
-    return <div className="container" style={{ paddingTop: '2rem' }}>Loading products...</div>;
+    return (
+      <div className="shop-page">
+        <div className="container">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading products...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="container" style={{ paddingTop: '2rem', color: 'red' }}>{error}</div>;
+    return (
+      <div className="shop-page">
+        <div className="container">
+          <div className="error-container">
+            <h2>Error Loading Products</h2>
+            <p>{error}</p>
+            <button className="btn btn-primary" onClick={() => window.location.reload()}>
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -104,7 +137,11 @@ export default function Shop() {
         </div>
 
         <div className="shop-toolbar">
-          <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+          <button 
+            className="sidebar-toggle" 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-expanded={sidebarOpen}
+          >
             {sidebarOpen ? 'Hide Filters' : 'Show Filters'}
           </button>
           <div className="search-bar">
@@ -114,22 +151,35 @@ export default function Shop() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              aria-label="Search products"
             />
           </div>
         </div>
 
         <div className="shop-layout">
           <aside className={`shop-sidebar ${sidebarOpen ? 'open' : ''}`}>
+            <div className="sidebar-header">
+              <h3>Filters</h3>
+              <button 
+                className="clear-filters-btn" 
+                onClick={handleClearFilters}
+                aria-label="Clear all filters"
+              >
+                Clear All
+              </button>
+            </div>
+
             <div className="sidebar-section">
-              <h3>Categories</h3>
+              <h4>Categories</h4>
               <ul className="sidebar-list">
                 {categories.map(category => (
                   <li key={category}>
                     <button
                       className={`sidebar-link ${selectedCategory === category ? 'active' : ''}`}
                       onClick={() => setSelectedCategory(category)}
+                      aria-pressed={selectedCategory === category}
                     >
-                      {category === 'all' ? 'All' : category}
+                      {category === 'all' ? 'All Products' : category}
                     </button>
                   </li>
                 ))}
@@ -137,7 +187,7 @@ export default function Shop() {
             </div>
 
             <div className="sidebar-section">
-              <h3>Price</h3>
+              <h4>Price Range</h4>
               <div className="price-inputs">
                 <input
                   type="number"
@@ -146,6 +196,7 @@ export default function Shop() {
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
                   className="price-input"
+                  aria-label="Minimum price"
                 />
                 <span className="price-sep">-</span>
                 <input
@@ -155,17 +206,18 @@ export default function Shop() {
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
                   className="price-input"
+                  aria-label="Maximum price"
                 />
               </div>
-              <button className="btn btn-secondary sidebar-apply" onClick={() => setSidebarOpen(false)}>Apply</button>
             </div>
 
             <div className="sidebar-section">
-              <h3>Sort by</h3>
+              <h4>Sort by</h4>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="filter-select"
+                aria-label="Sort products by"
               >
                 <option value="name">Name</option>
                 <option value="price-low">Price: Low to High</option>
@@ -173,11 +225,28 @@ export default function Shop() {
                 <option value="rating">Rating</option>
               </select>
             </div>
+
+            <button 
+              className="btn btn-primary sidebar-apply" 
+              onClick={handleApplyFilters}
+            >
+              Apply Filters
+            </button>
           </aside>
 
           <div className="shop-content">
-            <div className="products-count">
-              <p>Showing {filteredProducts.length} products</p>
+            <div className="products-header">
+              <div className="products-count">
+                <p>Showing {filteredProducts.length} products</p>
+              </div>
+              <div className="mobile-filters">
+                <button 
+                  className="btn btn-secondary" 
+                  onClick={() => setSidebarOpen(true)}
+                >
+                  Filters
+                </button>
+              </div>
             </div>
 
             <div className="products-grid">
@@ -185,16 +254,17 @@ export default function Shop() {
                 filteredProducts.map(product => (
                   <div key={product.id} className="product-card">
                     <div className="product-image-container">
-                      <Link to={`/shop/${product.id}`}>
+                      <Link to={`/shop/${product.id}`} aria-label={`View details for ${product.name}`}>
                         <img src={product.image} alt={product.name} className="product-image" />
                       </Link>
                       {!product.inStock && <div className="out-of-stock">Out of Stock</div>}
                       <div className="product-overlay">
-                        <Link to={`/shop/${product.id}`} className="btn-details">View Details</Link>
+                        <Link to={`/shop/${product.id}`} className="btn btn-secondary btn-details">View Details</Link>
                         <button 
-                          className="btn-cart"
+                          className="btn btn-primary btn-cart"
                           onClick={() => handleAddToCart(product)}
                           disabled={!product.inStock}
+                          aria-label={`Add ${product.name} to cart`}
                         >
                           Add to Cart
                         </button>
@@ -220,6 +290,12 @@ export default function Shop() {
                 <div className="no-products">
                   <h3>No products found</h3>
                   <p>Try adjusting your search or filter criteria</p>
+                  <button 
+                    className="btn btn-primary" 
+                    onClick={handleClearFilters}
+                  >
+                    Clear Filters
+                  </button>
                 </div>
               )}
             </div>

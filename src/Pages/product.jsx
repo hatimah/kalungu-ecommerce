@@ -1,6 +1,7 @@
 // src/pages/product.js
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { FaTruck, FaUndo, FaLeaf } from "react-icons/fa";
 import api from "../lib/api";
 import "./product.css";
 
@@ -58,21 +59,29 @@ const Product = () => {
 
   if (isLoading) {
     return (
-      <div className="product-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading product...</p>
+      <div className="product-page">
+        <div className="container">
+          <div className="product-loading">
+            <div className="loading-spinner"></div>
+            <p>Loading product...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="product-not-found">
-        <h2>Product not found</h2>
-        <p>The product you're looking for doesn't exist.</p>
-        <button onClick={() => navigate('/shop')} className="btn btn-primary">
-          Back to Shop
-        </button>
+      <div className="product-page">
+        <div className="container">
+          <div className="product-not-found">
+            <h2>Product not found</h2>
+            <p>The product you're looking for doesn't exist.</p>
+            <button onClick={() => navigate('/shop')} className="btn btn-primary">
+              Back to Shop
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -108,6 +117,7 @@ const Product = () => {
                   key={index}
                   className={`thumbnail ${selectedImage === index ? 'active' : ''}`}
                   onClick={() => setSelectedImage(index)}
+                  aria-label={`View image ${index + 1}`}
                 >
                   <img src={image} alt={`${product.name} view ${index + 1}`} />
                 </button>
@@ -154,9 +164,23 @@ const Product = () => {
               <div className="quantity-selector">
                 <label>Quantity:</label>
                 <div className="quantity-controls">
-                  <button onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1} className="quantity-btn">-</button>
+                  <button 
+                    onClick={() => handleQuantityChange(-1)} 
+                    disabled={quantity <= 1} 
+                    className="quantity-btn"
+                    aria-label="Decrease quantity"
+                  >
+                    -
+                  </button>
                   <span className="quantity-value">{quantity}</span>
-                  <button onClick={() => handleQuantityChange(1)} disabled={quantity >= 10} className="quantity-btn">+</button>
+                  <button 
+                    onClick={() => handleQuantityChange(1)} 
+                    disabled={quantity >= 10} 
+                    className="quantity-btn"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
 
@@ -182,21 +206,27 @@ const Product = () => {
 
             <div className="product-features">
               <div className="feature">
-                <span className="feature-icon">🚚</span>
+                <span className="feature-icon">
+                  <FaTruck />
+                </span>
                 <div>
                   <h4>Free Shipping</h4>
                   <p>On orders over $50</p>
                 </div>
               </div>
               <div className="feature">
-                <span className="feature-icon">↩️</span>
+                <span className="feature-icon">
+                  <FaUndo />
+                </span>
                 <div>
                   <h4>Easy Returns</h4>
                   <p>30-day return policy</p>
                 </div>
               </div>
               <div className="feature">
-                <span className="feature-icon">🌱</span>
+                <span className="feature-icon">
+                  <FaLeaf />
+                </span>
                 <div>
                   <h4>Eco-Friendly</h4>
                   <p>100% sustainable materials</p>
