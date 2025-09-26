@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import api from "../lib/api";
 import "./login.css";
 
@@ -171,12 +172,12 @@ export default function Login() {
             </div>
 
             <button type="button" className="btn btn-secondary social-btn">
-              <span className="social-icon">📘</span>
+              <FaFacebookF className="social-icon" />
               Continue with Facebook
             </button>
 
             <button type="button" className="btn btn-secondary social-btn">
-              <span className="social-icon">🔍</span>
+              <FaGoogle className="social-icon" />
               Continue with Google
             </button>
           </form>
